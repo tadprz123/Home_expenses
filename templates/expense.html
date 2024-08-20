@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Expense</title>
+</head>
+<body>
+<h1>Edit Expense</h1>
+<form method="POST" action="/expenses/{{ expense_id }}/">
+    {{ form.hidden_tag() }}
+    {{ form.category.label }} {{ form.category }}
+    {{ form.amount.label }} {{ form.amount }}
+    {{ form.description.label }} {{ form.description }}
+    {{ form.submit }}
+</form>
+</body>
+</html>

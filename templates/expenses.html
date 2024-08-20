@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expenses</title>
+</head>
+<body>
+<h1>Expenses</h1>
+<form method="POST" action="/expenses/">
+    {{ form.hidden_tag() }}
+    {{ form.category.label }} {{ form.category }}
+    {{ form.amount.label }} {{ form.amount }}
+    {{ form.description.label }} {{ form.description }}
+    {{ form.submit }}
+</form>
+<ul>
+    {% for expense in expenses %}
+    <li>{{ expense['category'] }}: ${{ expense['amount'] }} - {{ expense['description'] }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
