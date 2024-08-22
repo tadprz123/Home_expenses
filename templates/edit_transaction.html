@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Transaction</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.date.label }}<br>
+        {{ form.date() }}<br>
+        {% for error in form.date.errors %}
+            <span class="error">{{ error }}</span><br>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.type.label }}<br>
+        {{ form.type() }}<br>
+        {% for error in form.type.errors %}
+            <span class="error">{{ error }}</span><br>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.description.label }}<br>
+        {{ form.description() }}<br>
+        {% for error in form.description.errors %}
+            <span class="error">{{ error }}</span><br>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.amount.label }}<br>
+        {{ form.amount() }}<br>
+        {% for error in form.amount.errors %}
+            <span class="error">{{ error }}</span><br>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.currency.label }}<br>
+        {{ form.currency() }}<br>
+        {% for error in form.currency.errors %}
+            <span class="error">{{ error }}</span><br>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.submit() }}
+    </p>
+</form>
+<a href="{{ url_for('index') }}">Back to home</a>
+{% endblock %}

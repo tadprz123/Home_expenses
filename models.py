@@ -1,34 +1,58 @@
 import json
-from decimal import Decimal
+import requests
+from datetime import datetime
 
-class Expenses:
-    def __init__(self):
-        try:
-            with open("expenses.json", "r") as f:
-                self.expenses = json.load(f)
-        except FileNotFoundError:
-            self.expenses = []
+class Transaction:
+    def __init__(self, date, type, description, amount, currency):
+        self.date = date
+        self.type = type
+        self.description = description
+        self.amount = amount
+        self.currency = currency
 
-    def all(self):
-        return self.expenses
+    def to_dict(self):
+        return {
+            'date': self.date.strftime('%Y-%m-%d'),
+            'type': self.type,
+            'description': self.description,
+            'amount': float(self.amount),
+            'currency': self.currency
+        }
 
-    def get(self, id):
-        return self.expenses[id]
+    @staticmethod
+    def from_dict(data):
+        return Transaction(
+            date=datetime.strptime(data['date'], '%Y-%m-%d'),
+            type=data['type'],
+            description=data['description'],
+            amount=data['amount'],
+            currency=data['currency']
+        )
 
-    def create(self, data):
-        data.pop('csrf_token')
-        data['amount'] = float(data['amount'])  # Konwersja Decimal na float
-        self.expenses.append(data)
-        self.save_all()
+def load_transactions():
+    try:
+        with open('transactions.json', 'r') as f:
+            data = json.load(f)
+            return [Transaction.from_dict(d) for d in data]
+    except FileNotFoundError:
+        return []
+    except json.JSONDecodeError:
+        print("Error: JSON file is not readable or contains invalid JSON.")
+        return []
 
-    def save_all(self):
-        with open("expenses.json", "w") as f:
-            json.dump(self.expenses, f)
+def save_transactions(transactions):
+    with open('transactions.json', 'w') as f:
+        json.dump([t.to_dict() for t in transactions], f, indent=4)
 
-    def update(self, id, data):
-        data.pop('csrf_token')
-        data['amount'] = float(data['amount'])  # Konwersja Decimal na float
-        self.expenses[id] = data
-        self.save_all()
-
-expenses = Expenses()
+def get_exchange_rate(currency_code):
+    if currency_code == 'PLN':
+        return 1.0
+    url = f'http://api.nbp.pl/api/exchangerates/rates/A/{currency_code}/'
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        return data['rates'][0]['mid']
+    except (requests.RequestException, KeyError):
+        print(f"Error fetching exchange rate for {currency_code}.")
+        return None

@@ -1,9 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DecimalField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms import StringField, DecimalField, DateField, SelectField, SubmitField
+from wtforms.validators import DataRequired, NumberRange
 
-class ExpenseForm(FlaskForm):
-    category = StringField("Category", validators=[DataRequired(), Length(min=1, max=50)])
-    amount = DecimalField("Amount", validators=[DataRequired(), NumberRange(min=0.01)])
-    description = TextAreaField("Description", validators=[Length(max=200)])
-    submit = SubmitField("Add Expense")
+class TransactionForm(FlaskForm):
+    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
+    type = SelectField('Type', choices=[('income', 'Income'), ('expense', 'Expense')], validators=[DataRequired()])
+    description = StringField('Description', validators=[DataRequired()])
+    amount = DecimalField('Amount', places=2, validators=[DataRequired(), NumberRange(min=0)])
+    currency = SelectField('Currency', choices=[('PLN', 'PLN'), ('USD', 'USD'), ('EUR', 'EUR')], validators=[DataRequired()])
+    submit = SubmitField('Submit')

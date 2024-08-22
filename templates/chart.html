@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Income and Expenses Chart</h2>
+<img src="data:image/png;base64,{{ img_data }}" alt="Income and Expenses Chart">
+<a href="{{ url_for('index') }}">Back to home</a>
+{% endblock %}
